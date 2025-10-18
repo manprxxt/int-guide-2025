@@ -1,0 +1,244 @@
+## What is Serialization?
+Serialization in Java is the process of taking a live object in memory (which is just data stored in heap in binary form) and converting it into a sequence of bytes that represents the object’s state.
+Serialization is the process of converting an object’s state into a byte stream — so it can be:
+- Saved to a file or database
+- Sent over a network
+- Stored in cache, etc.
+And Deserialization is the reverse — reconstructing the object from bytes.
+
+import java.io.*;
+class Employee implements Serializable {
+    private static final long serialVersionUID = 1L;
+    String name;
+    int age;
+
+    Employee(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+public class SerializationExample {
+    public static void main(String[] args) throws Exception {
+        Employee emp = new Employee("John", 30);
+
+        // Serialize object
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("emp.ser"))) {
+            out.writeObject(emp);
+        }
+
+        // Deserialize object
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("emp.ser"))) {
+            Employee e = (Employee) in.readObject();
+            System.out.println(e.name + " - " + e.age);
+        }
+    }
+}
+
+
+## How it works internally:
+
+When you call:
+ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("emp.ser"));
+out.writeObject(emp);
+
+Here’s what happens:
+JVM checks if the object’s class implements Serializable.
+ - If not, it throws NotSerializableException.
+JVM walks through all non-transient, non-static fields of the object.
+For each field:
+- Primitive values are written directly (e.g. int, boolean, double).
+- For object references, it recursively serializes those objects too (if they are serializable).
+It records metadata like class name, serialVersionUID, and field names/types (for versioning).
+Finally, all this data is converted into a byte stream and written to the output file or network.
+
+🧾 The Output File — What Format Is It?
+The output of serialization is not a .class file, it’s a binary file (usually .ser).
+It’s not human-readable — it’s binary data.
+When you open it in Notepad, it will look like gibberish or random symbols, e.g.:
+
+¬í sr  Employee▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+
+## Steps to make a class as Serializable
+Step	What you do	                        Why
+1	    Implement Serializable	            Tells JVM object can be serialized
+2    	Use ObjectOutputStream to write	    Converts object → bytes
+3	    Use ObjectInputStream to read	      Converts bytes → object
+4     (optional)	Add serialVersionUID	  Ensures version compatibility
+
+## Purpose of serialVersionUID
+
+Every Serializable class has a unique identifier called serialVersionUID.
+It ensures version compatibility between serialized object and class definition.
+If versions mismatch → InvalidClassException.
+
+Example:
+private static final long serialVersionUID = 1L;
+
+If later you add/remove fields and recompile class with different UID — old serialized objects will fail to load.
+Why we need it:
+During deserialization, JVM checks if the serialVersionUID of the serialized object matches the class currently loaded.
+If it matches, deserialization proceeds.
+If you later add a new field without changing serialVersionUID, old serialized objects can still be deserialized.
+If you don’t define serialVersionUID, JVM generates one automatically (explained next).
+
+👉 Rule of Thumb:
+Always define serialVersionUID manually in Serializable classes.
+It prevents JVM from generating unpredictable UIDs automatically.
+
+How JVM Generates serialVersionUID (if not defined)
+If you don’t define it manually, JVM generates one based on class structure (fields, methods, access modifiers).
+It uses a hashing algorithm on class details.
+Any small code change can alter this hash → can change the generated UID → old serialized objects fail to deserialize.
+So even adding a private int temp; might change it.
+Hence — always define it explicitly.
+
+Customizing Serialization Behavior
+By default, serialization automatically writes all non-transient fields.
+Sometimes you want custom behavior, like:
+- Encrypt sensitive data
+- Skip certain fields
+- Compute derived fields
+
+How:
+Define private methods inside your class:
+Methods to customize:
+private void writeObject(ObjectOutputStream oos)
+private void readObject(ObjectInputStream ois)
+
+How to Serialize transient Variables
+By default, transient fields are ignored during serialization.
+To include them, use custom writeObject/readObject
+
+Improve Performance by Customizing Serialization
+Java’s default serialization is slow because:
+It writes a lot of metadata (class name, fields, types)
+Uses reflection
+Creates extra objects internally
+
+Ways to improve:
+Mark unnecessary fields as transient --> private transient BufferedImage cachedImage;
+Use Externalizable for full control --> You decide exactly what to write/read, skipping all overhead
+Use high-performance serialization libraries --> Kryo, Protobuf, Jackson (faster than default Java serialization)
+
+## CODE
+
+import java.io.*;
+
+// ✅ Serializable class with serialVersionUID
+class Employee implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String name;
+    int age;
+    transient String password;  // will not be serialized by default
+    transient String cacheData; // example of performance-conscious transient field
+
+    Employee(String name, int age, String password, String cacheData) {
+        this.name = name;
+        this.age = age;
+        this.password = password;
+        this.cacheData = cacheData;
+    }
+
+    // 🔹 Custom serialization to handle transient password
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();               // serialize non-transient fields
+        oos.writeObject("enc-" + password);     // manually serialize password (simple encryption)
+        // Note: cacheData is intentionally skipped to save space/performance
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        this.password = ((String) ois.readObject()).replace("enc-", ""); // decrypt password
+        this.cacheData = null; // optional: reinitialize transient cache after deserialization
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{name='" + name + "', age=" + age +
+                ", password='" + password + "', cacheData='" + cacheData + "'}";
+    }
+}
+
+public class SerializationDemo {
+    public static void main(String[] args) {
+        Employee emp = new Employee("Alice", 28, "mySecretPwd", "cachedImageData");
+
+        String filename = "employee.ser";
+
+        // 🔸 Serialize the object
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+            out.writeObject(emp);
+            System.out.println("Serialization successful!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 🔸 Deserialize the object
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            Employee deserializedEmp = (Employee) in.readObject();
+            System.out.println("Deserialization successful!");
+            System.out.println("Deserialized Employee: " + deserializedEmp);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+## Questions -
+
+Q1: What is serialization in Java?
+A: Converting an object’s state into a byte stream so it can be stored or transmitted. Deserialization reconstructs the object from bytes.
+
+Q2: Which classes can be serialized?
+A: Classes that implement Serializable. Otherwise, NotSerializableException is thrown.
+
+Q3: Will private fields be serialized?
+A: Yes ✅. Serialization ignores access modifiers — all non-transient, non-static fields (private, protected, public) are serialized.
+
+Q4: What is serialVersionUID? Why is it used?
+A: A unique version identifier for a class. It ensures version compatibility between serialized objects and class definition during deserialization.
+
+Q5: What happens if serialVersionUID is not defined?
+A: JVM generates one automatically based on class structure. Any change in class (adding/removing fields) can break deserialization (InvalidClassException).
+
+Q6: Will transient fields be serialized?
+A: No. They are ignored by default. But you can manually serialize them using writeObject / readObject.
+
+Q7: Will static fields be serialized?
+A: No. Static fields belong to the class, not the object. Only instance fields are serialized.
+
+Q8: How is a parent class serialized?
+Scenario 1: Parent class implements Serializable → parent fields are automatically serialized.
+Scenario 2: Parent class does NOT implement Serializable -> 
+
+import java.io.*;
+
+class Parent {
+    int a = 10;
+    Parent() { System.out.println("Parent constructor"); }
+}
+
+class Child extends Parent implements Serializable {
+    int b = 20;
+    private static final long serialVersionUID = 1L;
+}
+During deserialization of Child, Parent's constructo, beacause parent is not ser
+
+Q9: Can you serialize an object with a non-serializable field?
+If the field is non-transient → NotSerializableException.
+If the field is transient → serialization works fine, value is skipped.
+
+Q10: Can you serialize final fields?
+Yes ✅. Final fields are serialized like normal fields. But during deserialization, they are restored, even though normally final fields are immutable.
+
+Q11: Can you serialize inner classes?
+Non-static inner classes cannot be serialized directly → JVM tries to serialize the implicit reference to outer class, may fail if outer class is not serializable.
+Static inner classes behave like normal classes → serializable if Serializable implemented.
+
+Q12: Can you serialize interfaces?
+No. Interfaces are not objects. But a class implementing Serializable is serialized.
+
+
