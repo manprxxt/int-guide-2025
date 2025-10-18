@@ -1,0 +1,130 @@
+1️⃣ Why Maven is Required
+
+Dependency Management: Automatically downloads libraries and their transitive dependencies.
+Build Automation: Compile, test, package, and deploy in a single command (mvn clean install).
+Standard Project Structure: Enforces consistent directories (src/main/java, src/test/java, etc.).
+Integration: Works with IDEs, CI/CD pipelines, and artifact repositories.
+Transitive Dependencies: Handles indirect dependencies automatically.
+In short: Maven simplifies builds, manages dependencies, and standardizes projects.
+
+2️⃣ Code Review Best Practices
+
+Small PRs: Focused changes (~200–400 lines).
+Follow Standards: Consistent coding style, meaningful names, readable code.
+Correctness & Design: Handle edge cases, apply SOLID principles, ensure proper error handling.
+Testing: Add unit/integration tests, maintain good coverage.
+Performance & Security: Avoid bottlenecks, validate inputs, protect sensitive data.
+Constructive Feedback: Respectful, explain reasoning, discuss improvements.
+Use Tools: CI/CD, static analysis, automated formatting.
+Quick mnemonic: SCT-TPS → Small, Correct, Tested, Tools, Performance, Style
+
+1️⃣ Development to Deployment Cycle (CI/CD Flow)
+
+Development
+Developers write code in local environment.
+Version control using Git (or other VCS).
+
+Build
+Code is compiled, dependencies resolved (Maven/Gradle).
+Unit tests run automatically.
+
+Continuous Integration (CI)
+CI tool (e.g., Jenkins) automatically builds and tests code on each commit.
+Generates build artifacts (JAR/WAR/Docker image).
+
+Artifact Storage
+Built artifacts stored in repositories (Nexus, Artifactory, Docker Registry).
+
+Continuous Deployment/Delivery (CD)
+Deployment pipeline automatically or manually deploys the artifact to environments (Dev → QA → Staging → Prod).
+
+Monitoring & Feedback
+Application monitored for errors, performance, logs (Prometheus, Grafana, ELK stack).
+Feedback loops inform developers for quick fixes.
+
+2️⃣ Jenkins Process in CI/CD
+Source Code Integration: Jenkins monitors Git repo for commits.
+Build Automation: Jenkins runs build scripts (Maven/Gradle).
+Testing: Executes automated tests (unit, integration, regression).
+Artifact Management: Archives or pushes artifacts to repositories.
+Deployment: Triggers deployment scripts or Kubernetes pipelines.
+Notification: Sends build/deployment status to developers (email/Slack).
+Key Concept: Jenkins automates build → test → deploy, ensuring faster and reliable delivery.
+
+3️⃣ Kubernetes Deployment Process
+Containerization
+Application packaged as Docker container with all dependencies.
+
+Push to Container Registry
+Docker image pushed to registry (Docker Hub, ECR, GCR).
+
+Kubernetes Deployment
+Deployment YAML defines desired state (replicas, container image, ports).
+Kubernetes schedules containers on nodes (Pods).
+
+Scaling & Load Balancing
+Kubernetes automatically scales pods and balances traffic via Services.
+
+Updates & Rollbacks
+Rolling updates ensure zero downtime.
+Rollback to previous version if deployment fails.
+
+Monitoring
+Kubernetes provides pod status, logs, and resource metrics.
+Integration with Prometheus/Grafana for advanced monitoring.
+
+Quick Revision Flow
+Code → Git → Jenkins CI → Build/Tests → Artifact → Kubernetes Deployment → Scaling/Monitoring → Feedback
+
+
+### **Maven Plugin Management**
+
+* **Purpose:** Centralize plugin versions/config for child modules.
+* **Declaring:** `<pluginManagement>` inside `<build>` in parent POM.
+* **Key:** Does **not execute plugin**; child must declare it in `<plugins>` to use.
+
+**Example:**
+
+```xml
+<pluginManagement>
+  <plugins>
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.11.0</version>
+    </plugin>
+  </plugins>
+</pluginManagement>
+```
+
+---
+
+### **Maven Dependency Management**
+
+* **Purpose:** Centralize dependency versions for child modules.
+* **Declaring:** `<dependencyManagement>` in parent POM.
+* **Key:** Does **not include dependency**; child must declare it in `<dependencies>`.
+
+**Example:**
+
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>3.3.0</version>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
+---
+
+**Quick Diff:**
+
+| Plugin Mgmt               | Dependency Mgmt               |
+| ------------------------- | ----------------------------- |
+| Plugins (build tools)     | Dependencies (libraries)      |
+| Version & config only     | Version & scope only          |
+| Child must declare plugin | Child must declare dependency |
+
