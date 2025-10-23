@@ -1,0 +1,24 @@
+Design Patterns & Principles
+
+Core Principles
+
+SOLID, DRY, KISS
+Composition > Inheritance
+Understand cohesion & coupling
+
+Patterns (with real-world relevance)
+
+Singleton (double-checked locking, Enum)
+Factory / Abstract Factory
+Builder (for object creation flexibility)
+Strategy (e.g., sorting different ways)
+Adapter (bridge between incompatible APIs)
+Decorator (add functionality dynamically)
+Proxy (control access)
+Observer (event-driven)
+Flyweight / Prototype
+
+Expected in Interviews
+Given a use case → choose the best pattern & justify
+
+Implement quick code or explain where you used one in your project
