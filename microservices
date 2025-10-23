@@ -20,3 +20,137 @@ RDS, VPC, DNS, load balancing
 Auto-scaling & health checks
 SNS vs SQS (pub-sub vs queue)
 Monitoring & logging: CloudWatch, ELK, tracing with Zipkin/Sleuth
+
+---
+
+ 🧩 1. Decomposition Patterns (Breaking Monolith into Microservices)
+Used to decide how to split an application into services.
+
+ 🔹 a) Decompose by Business Capability
+* Each service focuses on a single business capability like *Order Service*, *Payment Service*, *Inventory Service*.
+* Helps achieve high cohesion and low coupling.
+
+ 🔹 b) Decompose by Subdomain (DDD - Domain Driven Design)
+* Use domain-driven design (DDD) to divide the system into bounded contexts like *User Context*, *Billing Context*.
+* Each context becomes a microservice.
+
+---
+
+ 🔄 2. Communication Patterns
+Microservices must communicate efficiently and reliably.
+
+ 🔹 a) Synchronous Communication (REST/gRPC)
+* Uses HTTP/REST or gRPC for direct, real-time requests.
+* Problem: Can lead to tight coupling or latency issues.
+
+ 🔹 b) Asynchronous Communication (Event-Driven)
+* Uses message brokers (Kafka, RabbitMQ, SNS/SQS).
+* Improves resilience, scalability, and decoupling.
+
+ 🔹 c) API Gateway Pattern
+* A single entry point for all client requests.
+* Handles authentication, routing, load balancing, rate limiting, etc.
+* Example: Netflix Zuul, Spring Cloud Gateway, Kong.
+
+---
+
+ ⚙️ 3. Database Patterns
+Each microservice should have its own data but often needs to share data across services.
+
+ 🔹 a) Database per Service
+* Each service owns its own schema and data.
+* Ensures loose coupling and independent scaling.
+
+ 🔹 b) Shared Database
+* Multiple services access a single DB.
+* Simpler but introduces tight coupling — generally discouraged.
+
+ 🔹 c) Saga Pattern (for distributed transactions)
+* Breaks large transactions into smaller local transactions.
+* Uses events or choreography/orchestration to maintain consistency.
+* Example: Order → Payment → Inventory → Notification
+
+ 🔹 d) CQRS (Command Query Responsibility Segregation)
+* Separates read and write models for performance and scalability.
+* Often used with Event Sourcing.
+
+ 🔹 e) Event Sourcing
+* Stores all changes as a sequence of events instead of just current state.
+* Easy to rebuild state, audit, and undo operations.
+
+---
+
+ 🧱 4. Resilience and Fault Tolerance Patterns
+Microservices must handle partial failures gracefully.
+
+ 🔹 a) Circuit Breaker Pattern
+* Prevents cascading failures.
+* Stops calling a failing service temporarily.
+* Libraries: Resilience4j, Hystrix.
+
+ 🔹 b) Retry Pattern
+* Retries failed requests after a certain interval.
+* Often combined with exponential backoff.
+
+ 🔹 c) Bulkhead Pattern
+* Isolates failures by creating separate thread pools or containers.
+* So failure in one service doesn’t affect others.
+
+ 🔹 d) Timeout Pattern
+* Limits waiting time for a response — avoids hanging threads.
+
+---
+
+ 📦 5. Security and Access Patterns
+
+ 🔹 a) API Gateway Security
+* Centralized authentication and authorization using JWT, OAuth2.
+
+ 🔹 b) Access Token / JWT Pattern
+* Each request carries a token to validate user identity.
+
+ 🔹 c) Service-to-Service Security
+* Uses mTLS (mutual TLS) or API keys for inter-service communication.
+
+---
+
+ 🧰 6. Observability Patterns
+For monitoring and debugging distributed systems.
+
+ 🔹 a) Log Aggregation Pattern
+* Centralized logging (ELK stack, Splunk).
+
+ 🔹 b) Distributed Tracing
+* Trace requests across multiple services (Jaeger, Zipkin).
+
+ 🔹 c) Metrics Aggregation
+* Collect metrics for health and performance (Prometheus, Grafana).
+
+---
+
+ 🚀 7. Deployment and Scaling Patterns
+
+ 🔹 a) Service Discovery Pattern
+* Automatically finds service instances (Eureka, Consul, Kubernetes DNS).
+
+ 🔹 b) Sidecar Pattern
+* Deploy helper components (like logging or proxy) alongside each service container.
+
+ 🔹 c) Strangler Fig Pattern
+* Gradually replaces parts of a monolith with microservices.
+
+---
+
+ 🧩 Summary Table
+
+| Category          | Common Patterns                                  |
+| ----------------- | ------------------------------------------------ |
+| Decomposition     | By Business Capability, By Subdomain             |
+| Communication     | API Gateway, Event-driven, REST                  |
+| Database          | Database per Service, Saga, CQRS, Event Sourcing |
+| Resilience        | Circuit Breaker, Retry, Bulkhead, Timeout        |
+| Security          | API Gateway, JWT, mTLS                           |
+| Observability     | Logging, Tracing, Metrics                        |
+| Deployment        | Service Discovery, Sidecar, Strangler Fig        |
+
+---
