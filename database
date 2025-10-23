@@ -1,0 +1,18 @@
+Databases — SQL & NoSQL
+
+SQL
+
+Joins: inner, outer, self
+Aggregation: GROUP BY, HAVING
+Subqueries, window functions
+Composite keys & indexes
+Isolation levels
+Query examples: nth highest salary, duplicate detection
+Performance tuning basics
+
+NoSQL
+
+CAP theorem
+MongoDB vs Elasticsearch
+Caching and read performance
+Handling slow reads (DB vs App side)
