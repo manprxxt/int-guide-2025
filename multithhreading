@@ -120,63 +120,39 @@ Example: ConcurrentHashMap iterator (vs fail-fast iterator of HashMap)
 6. Synchronization Utilities
 
 1. CountDownLatch
-
 Used to make a thread wait until other threads finish (one-time use)
 
-
 2. CyclicBarrier
-
 All threads wait at a common barrier point before proceeding (reusable)
 
-
 3. Semaphore
-
 Controls the number of threads accessing a shared resource
 
-
 4. CAS (Compare and Set)
-
 Non-blocking synchronization used internally in Atomic classes
 
-
 5. Atomic Classes
-
 Examples: AtomicInteger, AtomicBoolean, AtomicReference
-
 Use CAS internally for thread-safe, lock-free updates
-
-
 
 ---
 
 7. Practical Scenarios and Patterns
 
 1. Producer–Consumer Pattern
-
 Implement using wait/notify (traditional way) or BlockingQueue (modern way)
 
-
 2. Object Pool Pattern
-
 Maintains reusable objects like threads or DB connections to reduce creation cost
 
-
 3. Parallel / Pipeline Processing
-
 Achieved using ExecutorService or CompletableFuture chaining
 
-
 4. Common Business Use Cases
-
 Asynchronous APIs (payment → inventory → email)
-
 Background tasks using thread pools
-
 Concurrent caches with ConcurrentHashMap
-
 Coordinating tasks with CountDownLatch or CyclicBarrier
-
-
 
 ---
 
@@ -187,23 +163,20 @@ Q1. Given a list of integers and number of threads → add 1 to each element usi
 Q2. Implement order placement using CompletableFuture
 Steps: initiatePayment → updateInventory → sendEmail
 Demonstrate async composition with error handling
-
-
 ---
 
 9. Summary (Quick Reference)
 
 Area	Key Concepts	Common Interview Topics
 
-Thread basics	Lifecycle, scheduler, run/start	Thread states, priorities
-Synchronization	synchronized, wait/notify, locks	Object vs class lock
-Executor	ExecutorService, thread pools	Thread pool implementation
-Concurrency	Future, CompletableFuture	Async chaining
-Data structures	ConcurrentHashMap, BlockingQueue	CHM internals, use cases
-Utilities	CountDownLatch, CyclicBarrier, Semaphore	Coordination mechanisms
-Atomic	CAS, AtomicInteger	Lock-free updates
-Patterns	Producer-Consumer, Object Pool	Design pattern implementations
-Advanced	Fork–Join, parallelism	Parallel data processing
-
+Thread basics      	Lifecycle, scheduler, run/start	Thread states, priorities
+Synchronization	    synchronized, wait/notify, locks	Object vs class lock
+Executor	          ExecutorService, thread pools	Thread pool implementation
+Concurrency	        Future, CompletableFuture	Async chaining
+Data structures	    ConcurrentHashMap, BlockingQueue	CHM internals, use cases
+Utilities	          CountDownLatch, CyclicBarrier, Semaphore	Coordination mechanisms
+Atomic	            CAS, AtomicInteger	Lock-free updates
+Patterns	          Producer-Consumer, Object Pool	Design pattern implementations
+Advanced	           Fork–Join, parallelism	Parallel data processing
 
 ---
