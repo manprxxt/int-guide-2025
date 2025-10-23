@@ -1,0 +1,22 @@
+Microservices & Distributed Systems
+
+
+Monolith vs Microservices tradeoffs
+Inter-service communication (REST/gRPC)
+API Gateway, Service Discovery
+Circuit Breakers (Resilience4j / Hystrix)
+Event-driven architecture
+Saga pattern (for distributed transactions)
+Data consistency: eventual vs strong
+Shared DB anti-pattern
+Caching & rate-limiting
+Scalability & fault tolerance
+
+AWS 
+
+S3 vs EFS vs EBS
+Lambda basics
+RDS, VPC, DNS, load balancing
+Auto-scaling & health checks
+SNS vs SQS (pub-sub vs queue)
+Monitoring & logging: CloudWatch, ELK, tracing with Zipkin/Sleuth
