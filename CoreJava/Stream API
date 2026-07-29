@@ -1,0 +1,48 @@
+1. Find occurence of e in "Hello"
+2. Count of each word in an array of string
+3. First non-repeating character using streams - Input: "stress", Output: 't'
+4. Write a Java program to find the longest string in a given array
+        String[] letters = {"Milind","Mehta","follow","java8","Microservice","Springboot"};
+        // output -> Microservice
+5. find the data having more than 1 occurrence-
+        "pune","delhi","bangalore","mumbai","delhi","mumbai" -> [delhi:2,mumbai:2]
+6. Given a list of employees find avg salary by age rage (range was given, e.g. 18-25) using java8 stream
+7. Convert list of string to map where the key will be the length of string and value will be the count of string with same length.
+        e.g.: ab, abc, ag, def, abcd
+        output: { 2: 2[ab,ag], 3: 2[abc,def], 4: 1[abcd] }
+8. Given an 2d Array of String -- return list of duplicate strings 
+9. class Employee {
+                      int id;
+                      String name;
+                      String department;
+                      double salary;
+                      // constructor/getters
+                  }
+    Write code to:
+            Group employees by department
+            Find highest-paid employee in each department
+            Return department → employee name map
+    follow up:
+    1. what interface does grouping by function implement
+    2. what happens in Collectors.toMap().
+    3. what danger is poses?
+10. You are given a Sentence class with variables List<String> words and String paragraph. The data is provided by the interviewer. Write logic to find the top 3 most frequent words across all Sentence objects.
+11. Problem: You have a list of Sentences. Each sentence contains a list of words. Write a Stream pipeline to find the top 3 most frequently occurring words (case-insensitive) across all sentences, excluding common "stop words" (e.g., "the", "a", "is").
+            List<List<String>> sentences = List.of(List.of("The", "Java", "is", "fun"), 
+            List.of("Java", "is", "powerful", "and", "Java", "is", "fast"),
+            List.of("Coding", "in", "Java", "is", "fun"));
+            List<String> stop = List.of("the", "is", "and", "in");
+            Expectation: Expected: [java, fun, powerful]
+12. Given a list<list> strings
+           List<List<String>> sentences = Arrays.asList( Arrays.asList("apple", "bannana", "cherry"), Arrays.asList("orange", "papaya", "the"), Arrays.asList("avacodo", "bannana", "is") );
+           List<String> stop = Arrays.asList(“is”, “the”); 
+           from the given lists we have to find the top 3 longest length strings which are not present in the stop list and if the lengths are equal print the element which one is comes first in the original order
+13. get any 15 authors with unique surname in uppercase and age above 50(Provided Author class with some fields)
+14. find the First Non-Repeating Character
+    String s = "AAnish"
+      Extension to the above question, non repeating character from array of Strings both in streams and bruteforce
+15. List.of(1,2,3,4): find the sum of square of even numbers using java 8 streams.
+16. given a list of employee (name, age, sal), write a program to print employees having sal>1000 in a map(key sal, value is list employee)
+17. given a list of strings give a function to sum all the number of characters whose length is greater than 5
+18. Write a method that calculates the total number of letters in all names that are longer than 5 characters.
+    String[] names = {"Alice", "Jonathan", "Bob", "Catherine", "Eve"};
