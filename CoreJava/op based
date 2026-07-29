@@ -13,3 +13,4 @@
           print(null);
           print(null); //if print(String str) method commented 
           print(null); //if print(Object obj) method commented 
+2) Integer a = 100, b = 100; Integer c = 500, d = 500; System.out.println(a == b); System.out.println(c == d); What's the output?
