@@ -1,0 +1,15 @@
+1) Method overloading questions what will be output
+          private static void print(String str){
+              System.out.println("print String "+ str);
+          }
+          private static void print(Object obj){
+              System.out.println("print Object "+ obj);
+          }
+          private static void print(Integer num){
+              System.out.println("print Integer "+ num);
+          }
+          //invoke below methods and predict output
+          print("interview");
+          print(null);
+          print(null); //if print(String str) method commented 
+          print(null); //if print(Object obj) method commented 
