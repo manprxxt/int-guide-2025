@@ -1,3 +1,19 @@
+EXP-1
 1. JVM architecture
 2. Hashmap internals
 3. Equals and hashcode contract
+
+
+EXP-2
+featured used in java 8 
+java 17
+when we use records and sealed classed?
+records vs Lombok
+canonical constructor?
+virtual threads?
+enhancements done in memory management in java 21
+java sequential vs parallel streams
+improvement done in concurrent hashmap and normal hashmap in java8
+memory management for application/ while running the program, how memory allocated/ deallocated etc
+how classes are loaded into diff class loaders?
+how are Strings immutable?
