@@ -1,0 +1,86 @@
+1. Sealed Classes
+
+How it was before? Java inheritance was completely open. Any class could extend another unless explicitly prevented. Or using final that means nobody can extend it.
+This made it difficult to enforce domain rules.
+
+What changed in Java 17?
+Java 17 introduced sealed classes, allowing a class or interface to explicitly restrict which classes can extend or implement it.
+                  public sealed class Shape
+                          permits Circle, Rectangle {
+                  }        
+With this declaration:
+- Only Circle and Rectangle can extend Shape
+- Any other attempt to extend Shape results in a compile-time error
+
+Rules to Follow When Using Sealed Classes?
+Rule 1: A sealed class must declare its permitted subclasses
+                public sealed class Shape
+                        permits Circle, Rectangle {
+                }        
+The permits list defines all allowed direct subclasses. No class outside this list can extend Shape
+
+Rule 2: Every permitted subclass must declare its inheritance behavior
+Each permitted subclass must be marked as exactly one of:
+✔ final -Prevents further inheritance       
+✔ sealed-Continues controlled inheritance at the next level       
+✔ non-sealed-Reopens inheritance for that branch
+              public non-sealed class Triangle extends Shape {
+              }        
+If a permitted subclass does not declare one of these, the code will not compile.
+
+Rule 3: Permitted subclasses must be known at compile time
+Permitted subclasses must be:
+  In the same package, or
+  In the same module
+This ensures the compiler can fully verify the hierarchy.
+
+Rule 4: Sealed classes can also be interfaces. The same rules apply as sealed classes.
+
+For example, in a payment system, I might have a sealed PaymentResult with Success, Failure, and Pending implementations. 
+Success can contain a transaction ID, Failure can contain an error message, and Pending can contain pending information. 
+This is more expressive than an enum when different states require different data.
+
+                 Do I have a fixed set?
+                         |
+             +-----------+-----------+
+             |                       |
+            NO                      YES
+             |                       |
+      Open for extension             |
+             |                       |
+     interface / abstract            |
+             |                       |
+                                    |
+                         +----------+----------+
+                         |                     |
+                    Just constants?       Different data/
+                         |                behavior?
+                        YES                    |
+                         |                    YES
+                       enum             sealed class /
+                                        sealed interface
+
+Can a sealed class have methods, constructors, and fields?
+Can a sealed class be abstract?
+Can a sealed class be instantiated?
+If class B extends sealed class A and B is non-sealed, can class C access A? yes (indirectly it can, java rules of multiple inheritance applies here)
+
+==================================================================================================================================================
+
+2. Pattern matching
+
+How it was before
+Using instanceof always required an explicit cast.
+            if (obj instanceof String) {
+                String s = (String) obj;
+                System.out.println(s.length());
+            }        
+What changed in Java 17
+Java 17 combines type checking and casting into one step.
+            if (obj instanceof String s) {
+                System.out.println(s.length());
+            }        
+Why it’s better
+  Less boilerplate
+  Safer code
+  Better readability
