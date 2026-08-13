@@ -16,3 +16,28 @@ CAP theorem
 MongoDB vs Elasticsearch
 Caching and read performance
 Handling slow reads (DB vs App side)
+
+
+Questions-
+1)pagination and indexing is all in place, we are processing 10,000 data at a time but it is still slow, latency is high. how to deal with it?
+ans- check for joins, check - fetching from db is taking time? or after db reaching to api taking time. 
+2) we have index on some column but query is not picking that index. execution plan is not going for index scan but is going for table scan?
+let say in customer table we have 2 columns - country and name. in which column will u create index?
+let say i have index on country and i execute select * from customer where country = "india" will index be used here?
+ans - cardinality
+3) what are views? why required? what we want to achieve with it? does it contribute in faster processing?
+4) composite indexes? - combination of indexes
+	we have index on (A,B,C) and my select query only have one column A will DB go for index or not? what about query using B, and then C and then ABC - composite key
+select * from cust where A='X"
+select * from cust where B='X"
+select * from cust where C='X"
+select * from cust where A='X" and B="Y" and C="Z"
+ 
+which queries will goes for index scan or table scan? 
+5) what is indexing? types? and working of all types? clustered/ non-clustered index? - indexes fasten the search but increase the memory
+6) can we have clustered indexes on any other columns than primary key? - yes
+7) what is covering index?
+8) what are the other ways than indexes to optimise db calls? partitioning - if table is huge, read/write replicas (read replicas - useful for generating reports) (use stored procedures for repetitive tasks)
+9) partitioning vs sharding
+10) sequence of optimising the db? like what should be the first thing?
+ans- check the execution plan > check if query can be rewritten? query optimisation > indexing > partitioning > sharding
